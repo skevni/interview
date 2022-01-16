@@ -119,24 +119,30 @@ public class MyLinkedList<E> {
 
     private E delete(Node<E> node) {
         Node<E> tmpNode = new Node<>(node.getElement(), node.getPrev(), node.getNext());
-        if (node.getPrev() == null) {
-            Node<E> tmpNext = node.getNext();
-            tmpNext.setPrev(null);
-            first = tmpNext;
-        } else {
-            node.getPrev().setNext(tmpNode.getNext());
-        }
+        if (size > 1) {
+            if (node.getPrev() == null) {
+                Node<E> tmpNext = node.getNext();
+                tmpNext.setPrev(null);
+                first = tmpNext;
+            } else {
+                node.getPrev().setNext(tmpNode.getNext());
+            }
 
-        if (node.getNext() == null) {
-            Node<E> tmpPrev = node.getPrev();
-            tmpPrev.setNext(null);
-            last = tmpPrev;
+            if (node.getNext() == null) {
+                Node<E> tmpPrev = node.getPrev();
+                tmpPrev.setNext(null);
+                last = tmpPrev;
+            } else {
+                node.getNext().setPrev(tmpNode.getPrev());
+            }
         } else {
-            node.getNext().setPrev(tmpNode.getPrev());
+            first = null;
+            last = null;
         }
 
         node.setElement(null);
         node.setNext(null);
+        node.setPrev(null);
         size--;
         return tmpNode.getElement();
     }
