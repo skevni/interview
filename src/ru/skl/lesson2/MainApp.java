@@ -1,11 +1,9 @@
 package ru.skl.lesson2;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MainApp {
     public static void main(String[] args) {
         MyLinkedList<String> ll = new MyLinkedList<>();
+
         ll.add("1");
         ll.addFirst("2");
         ll.addFirst("99");

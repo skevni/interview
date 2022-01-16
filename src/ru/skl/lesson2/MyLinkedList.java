@@ -105,15 +105,6 @@ public class MyLinkedList<E> {
         } else {
             // TODO: поиск с конца списка
         }
-//        Node<E> previousElement = temp.getPrev();
-//        Node<E> nextElement = temp.getNext();
-//
-//        previousElement.setNext(nextElement);
-//        nextElement.setPrev(previousElement);
-
-//        temp.setPrev(null);
-//        temp.setNext(null);
-
 
         return delete(temp);
     }
