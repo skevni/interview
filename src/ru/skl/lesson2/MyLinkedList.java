@@ -95,15 +95,23 @@ public class MyLinkedList<E> {
 
         int middle = size / 2;
         int counter = 0;
-        Node<E> temp = first.getNext();
-        counter++;
+        Node<E> temp;
         if (index <= middle) {
+            temp = first.getNext();
+            counter++;
             while (index > counter) {
                 temp = temp.getNext();
                 counter++;
             }
         } else {
-            // TODO: поиск с конца списка
+            counter = size - 1;
+            // 0 1 2 3 4 5 6
+            temp = last.getPrev();
+            counter--;
+            while (index < counter) {
+                temp = temp.getPrev();
+                counter--;
+            }
         }
 
         return delete(temp);

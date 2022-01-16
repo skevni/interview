@@ -9,9 +9,11 @@ public class MainApp {
         ll.addFirst("99");
         ll.addFirst("100");
         ll.add("3");
+        ll.add("4");
+        ll.add("5");
 
         System.out.println(ll);
-        System.out.println("removed: " + ll.remove(2));
+        System.out.println("removed: " + ll.remove(4));
         System.out.println(ll);
 
     }
