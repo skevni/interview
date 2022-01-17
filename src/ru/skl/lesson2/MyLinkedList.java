@@ -1,7 +1,6 @@
 package ru.skl.lesson2;
 
-
-public class MyLinkedList<E> {
+public class MyLinkedList<E> implements MyList<E> {
     private Node<E> first;
     private Node<E> last;
     private int size;
@@ -15,14 +14,6 @@ public class MyLinkedList<E> {
 
     public E getLastElement() {
         return last.getElement();
-    }
-
-    public Node<E> getFirst() {
-        return first;
-    }
-
-    public Node<E> getLast() {
-        return last;
     }
 
     public void addFirst(E element) {
@@ -52,10 +43,37 @@ public class MyLinkedList<E> {
         size++;
     }
 
+    @Override
     public void add(E element) {
         addLast(element);
     }
 
+    @Override
+    public void add(int index, E element) {
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException("Index out of range");
+        }
+
+        if (index == 0) {
+            addFirst(element);
+            return;
+        }
+        if (index == size - 1) {
+            addLast(element);
+            return;
+        }
+
+        Node<E> currentNode = getNode(index);
+        Node<E> prevNode = currentNode.getPrev();
+
+        Node<E> newNode = new Node<>(element, prevNode, currentNode);
+        prevNode.setNext(newNode);
+        currentNode.setPrev(newNode);
+
+        size++;
+    }
+
+    @Override
     public E get(int index) {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException("Index out of range");
@@ -68,19 +86,10 @@ public class MyLinkedList<E> {
             return getLastElement();
         }
 
-        int middle = size / 2;
-        int counter = 0;
-        Node<E> temp = first.getNext();
-        counter++;
-        if (index <= middle) {
-            while (index > counter) {
-                temp = temp.getNext();
-                counter++;
-            }
-        }
-        return temp.getElement();
+        return getNode(index).getElement();
     }
 
+    @Override
     public E remove(int index) {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException("Index out of range");
@@ -93,6 +102,10 @@ public class MyLinkedList<E> {
             return delete(last);
         }
 
+        return delete(getNode(index));
+    }
+
+    private Node<E> getNode(int index) {
         int middle = size / 2;
         int counter = 0;
         Node<E> temp;
@@ -113,8 +126,7 @@ public class MyLinkedList<E> {
                 counter--;
             }
         }
-
-        return delete(temp);
+        return temp;
     }
 
     private E delete(Node<E> node) {
@@ -147,12 +159,28 @@ public class MyLinkedList<E> {
         return tmpNode.getElement();
     }
 
+    @Override
     public boolean isEmpty() {
         return size == 0;
     }
 
+    @Override
     public int getSize() {
         return size;
+    }
+
+    @Override
+    public void clear() {
+        Node<E> currentNode = first;
+        while (currentNode.getNext() != null) {
+            Node<E> nextNode = currentNode.getNext();
+            currentNode.setPrev(null);
+            currentNode.setNext(null);
+            currentNode.setElement(null);
+            currentNode = nextNode;
+        }
+        size = 0;
+        first = last = null;
     }
 
     @Override
