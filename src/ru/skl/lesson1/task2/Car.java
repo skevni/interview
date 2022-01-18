@@ -1,7 +1,7 @@
 package ru.skl.lesson1.task2;
 
 abstract class Car {
-    public Engine engine;
+    private Engine engine;
     private String color;
     private String name;
 
