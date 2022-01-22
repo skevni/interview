@@ -79,3 +79,43 @@ JOIN public.seances s2 ON (s2.start_at - s.start_at) > '00:30'::INTERVAL AND s2.
 JOIN public.films f2 ON f2.id = s2.film_id
 ORDER BY s2.start_at - s.start_at;
 
+WITH w AS (
+SELECT title, avg(cnt) avg_seance, sum(cnt) number_spectators, sum(summ) total_sum
+FROM (
+SELECT f.title , s.id seance, count(t.id) cnt,sum(t.price) summ
+FROM public.tickets t
+JOIN public.seances s ON s.id =t.seance_id
+JOIN public.films f ON f.id =s.film_id
+GROUP BY f.title, s.id
+ORDER BY sum(t.price) DESC) tt
+GROUP BY title)
+SELECT title, avg_seance, number_spectators, total_sum FROM w
+UNION ALL
+SELECT 'TOTAL:', sum(avg_seance) avg_seance, sum(number_spectators) number_spectators, sum(total_sum) total_sum
+FROM w
+;
+
+/*
+ число посетителей и кассовые сборы, сгруппированные по времени начала фильма: с 9 до 15, с 15 до 18, с 18 до 21, с 21 до 00:00
+ (сколько посетителей пришло с 9 до 15 часов и т.д.).
+*/
+SELECT '09:00 до 15:00' seance_time,count(*) count_spectators, COALESCE (SUM(t.price),0) total_sum
+FROM public.seances s
+JOIN public.tickets t ON t.seance_id = s.id
+WHERE start_at::time >= '09:00:00'::time AND start_at::time < '15:00:00'::time
+UNION
+SELECT '15:00 до 18:00' seance_time,count(*) count_spectators, COALESCE (SUM(t.price),0) total_sum
+FROM public.seances s
+JOIN public.tickets t ON t.seance_id = s.id
+WHERE start_at::time >= '15:00:00'::time AND start_at::time < '18:00:00'::time
+UNION
+SELECT '18:00 до 21:00' seance_time,count(*) count_spectators, COALESCE (SUM(t.price),0) total_sum
+FROM public.seances s
+JOIN public.tickets t ON t.seance_id = s.id
+WHERE start_at::time >= '18:00:00'::time AND start_at::time < '21:00:00'::time
+UNION
+SELECT '21:00 до 00:00',count(*) count_spectators, COALESCE (SUM(t.price),0) total_sum
+FROM public.seances s
+JOIN public.tickets t ON t.seance_id = s.id
+WHERE start_at::time >= '21:00:00'::time AND start_at::time < '00:00:00'::time
+;
