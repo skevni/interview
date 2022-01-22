@@ -1,9 +1,5 @@
 CREATE DATABASE homework4 TEMPLATE template0;
 
-DROP TABLE public.tickets;
-DROP TABLE public.seances;
-DROP TABLE public.films;
-
 CREATE TABLE films(id serial8 PRIMARY KEY,
 title varchar(255) NOT null,
 duration int NOT NULL
@@ -34,8 +30,6 @@ price numeric(8,2)
 INSERT INTO public.tickets
 (ticket_number, seance_id, price)
 VALUES('1-1', 1, 100.05),('3-1', 3, 110.16);
-
-SELECT * FROM public.tickets t ;
 
 /*
  ошибки в расписании (фильмы накладываются друг на друга), отсортированные по возрастанию времени.
