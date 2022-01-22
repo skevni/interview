@@ -31,8 +31,6 @@ INSERT INTO public.tickets
 (ticket_number, seance_id, price)
 VALUES('1-1', 1, 100.05),('3-1', 3, 110.16);
 
-SELECT * FROM public.tickets t ;
-
 SELECT f.title, s.start_at, f.duration, sf.title, sf.start_at, sf.duration
 FROM public.seances s
 JOIN public.films f ON f.id = s.film_id
