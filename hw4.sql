@@ -98,23 +98,45 @@ FROM w
 /*
  число посетителей и кассовые сборы, сгруппированные по времени начала фильма: с 9 до 15, с 15 до 18, с 18 до 21, с 21 до 00:00
  (сколько посетителей пришло с 9 до 15 часов и т.д.).
+ В первом запросе... если нужны все интервалы, то надо использовать RIGHT JOIN dt
+ Второй запрос сделан для одного дня. Можно добавить дату в выборку и будет по дням и времени.
 */
-SELECT '09:00 до 15:00' seance_time,count(*) count_spectators, COALESCE (SUM(t.price),0) total_sum
+
+WITH dt AS (
+SELECT '09:00:00'::time AS start_period, '14:59:59'::time AS end_period
+UNION
+SELECT '15:00:00'::time AS start_period, '17:59:59'::time AS end_period
+UNION
+SELECT '18:00:00'::time AS start_period, '20:59:59'::time AS end_period
+UNION
+SELECT '21:00:00'::time AS start_period, '23:59:59'::time AS end_period
+)
+SELECT s.start_at::date start_date ,concat('from ',dt.start_period, ' to ', dt.end_period) AS period, count(t.id) count_spectators, COALESCE (SUM(t.price),0) total_sum
+FROM public.seances s
+JOIN public.tickets t ON t.seance_id = s.id
+JOIN dt ON s.start_at::time >= dt.start_period AND s.end_at::time < dt.end_period
+GROUP BY s.start_at , concat('from ',dt.start_period, ' to ', dt.end_period), dt.start_period
+ORDER BY dt.start_period
+;
+
+// или так
+
+SELECT 'from 09:00 to 15:00' seance_time,count(*) count_spectators, COALESCE (SUM(t.price),0) total_sum
 FROM public.seances s
 JOIN public.tickets t ON t.seance_id = s.id
 WHERE start_at::time >= '09:00:00'::time AND start_at::time < '15:00:00'::time
 UNION
-SELECT '15:00 до 18:00' seance_time,count(*) count_spectators, COALESCE (SUM(t.price),0) total_sum
+SELECT 'from 15:00 to 18:00' seance_time,count(*) count_spectators, COALESCE (SUM(t.price),0) total_sum
 FROM public.seances s
 JOIN public.tickets t ON t.seance_id = s.id
 WHERE start_at::time >= '15:00:00'::time AND start_at::time < '18:00:00'::time
 UNION
-SELECT '18:00 до 21:00' seance_time,count(*) count_spectators, COALESCE (SUM(t.price),0) total_sum
+SELECT 'from 18:00 to 21:00' seance_time,count(*) count_spectators, COALESCE (SUM(t.price),0) total_sum
 FROM public.seances s
 JOIN public.tickets t ON t.seance_id = s.id
 WHERE start_at::time >= '18:00:00'::time AND start_at::time < '21:00:00'::time
 UNION
-SELECT '21:00 до 00:00',count(*) count_spectators, COALESCE (SUM(t.price),0) total_sum
+SELECT 'from 21:00 to 00:00',count(*) count_spectators, COALESCE (SUM(t.price),0) total_sum
 FROM public.seances s
 JOIN public.tickets t ON t.seance_id = s.id
 WHERE start_at::time >= '21:00:00'::time AND start_at::time < '00:00:00'::time
