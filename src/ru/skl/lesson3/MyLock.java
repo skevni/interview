@@ -74,6 +74,7 @@ public class MyLock {
             isLockAcquired = lock.tryLock(5, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             e.printStackTrace();
+            lock.unlock();
         }
         if (isLockAcquired) {
             try {
