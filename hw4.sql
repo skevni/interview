@@ -36,15 +36,18 @@ VALUES('1-1', 1, 100.05),('3-1', 3, 110.16);
  Выводить надо колонки «фильм 1», «время начала», «длительность», «фильм 2», «время начала», «длительность»;
  */
 
+ -- Если предполагается, что нет времени окончания сеанса, а есть только время начала и длительность,
+ -- то в качестве времени окончания я бы использовал "время начала + длительность"
+
 SELECT f.title фильм1, s.start_at "время начала", f.duration длительность, f2.title фильм2, s2.start_at "время начала",f2.duration длительность
 FROM public.seances s
 JOIN public.films f ON f.id = s.film_id
 JOIN public.seances s2 ON s2.start_at BETWEEN s.start_at AND s.end_at AND s2.id <> s.id
 JOIN public.films f2 ON f2.id = s2.film_id
-WHERE EXISTS (SELECT 1 FROM public.seances s2 WHERE s.start_at < s2.end_at AND s.end_at>s2.start_at AND s.id<>s2.id)
 ORDER BY s.start_at ;
 
---Еще один вариант
+--Еще один вариант, будет в 2 раза больше строк из за того, что сначала один фильм ссылается на другой,
+-- а потом наоборот
 
 SELECT f.title фильм1, s.start_at "время начала", f.duration длительность, sf.title фильм2, sf.start_at "время начала", sf.duration длительность
 FROM public.seances s
@@ -79,6 +82,11 @@ JOIN public.seances s2 ON (s2.start_at - s.start_at) > '00:30'::INTERVAL AND s2.
 JOIN public.films f2 ON f2.id = s2.film_id
 ORDER BY s2.start_at - s.start_at;
 
+/*
+список фильмов, для каждого — с указанием общего числа посетителей за все время, среднего числа зрителей за сеанс и
+общей суммы сборов по каждому фильму (отсортировать по убыванию прибыли). Внизу таблицы должна быть строчка «итого»,
+содержащая данные по всем фильмам сразу;
+*/
 WITH w AS (
 SELECT title, avg(cnt) avg_seance, sum(cnt) number_spectators, sum(summ) total_sum
 FROM (
