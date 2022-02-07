@@ -6,6 +6,7 @@ import ru.skl.lesson5.entities.Student;
 import ru.skl.lesson5.util.HibernateUtil;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,6 +29,18 @@ public class MainApp {
         studentRepository.addAll(students);
 
 //        studentRepository.deleteAll(studentRepository.findByName("Ivanov"));
+
+        List<Student> list = new ArrayList<>();
+        for (int i = 0; i < 1000; i++) {
+            list.add(Student.builder().name("Student" + (i + 1)).build());
+        }
+
+        studentRepository.addAll(list, 1000);
+
+        for (Student student1 : studentRepository.findAll()) {
+            System.out.println(student1.toString());
+        }
+
 
         HibernateUtil.shutdownSessionFactory();
     }

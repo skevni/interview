@@ -1,19 +1,15 @@
 package ru.skl.lesson5.dao;
 
-import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.postgresql.core.NativeQuery;
 import ru.skl.lesson5.entities.Student;
 import ru.skl.lesson5.util.HibernateUtil;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class StudentRepository {
-    public static final int BUFFER_SIZE_FLUSH = 100;
+    private static final int BUFFER_SIZE_FLUSH = 100;
 
     public StudentRepository() {
     }
@@ -29,7 +25,15 @@ public class StudentRepository {
     public List<Student> findByName(String name) {
         List<Student> students;
         try (Session session = HibernateUtil.openSession()) {
-            students = session.createNativeQuery("select * from student where name = :criteria", Student.class).setParameter("criteria",name).list();
+            students = session.createNativeQuery("select st.* from student st where name = :criteria", Student.class).setParameter("criteria", name).list();
+        }
+        return students;
+    }
+
+    public List<Student> findAll() {
+        List<Student> students;
+        try (Session session = HibernateUtil.openSession()) {
+            students = session.createNativeQuery("select st.* from student st", Student.class).list();
         }
         return students;
     }
