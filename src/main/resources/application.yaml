@@ -1,13 +1,13 @@
 server:
   port: 8189
   servlet:
-    context-path: /hw7
+    context-path: /
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql:/localhost:5489/hw7
-      user: postgres
-      password: postgres
+    url: jdbc:postgresql://localhost:5439/hw7
+    username: postgres
+    password: postgres
   jpa:
     show-sql: true
     properties:
