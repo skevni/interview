@@ -1,0 +1,7 @@
+server:
+  port: 8189
+
+database:
+  url: jdbc:postgresql:/localhost:5489/hw7
+  user: postgres
+  password: postgres
