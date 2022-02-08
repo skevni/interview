@@ -1,0 +1,15 @@
+<div class="container" ng-controller="studentsEditController">
+    <h3>Добавить студента</h3>
+    <br><br>
+    <form ng-submit="edit()" novalidate>
+        <div class="mb-3">
+            <label for="studentName" class="form-label">Имя студента</label>
+            <input type="text" class="form-control" ng-model="student.name" id="studentName" placeholder="Введите имя студента">
+        </div>
+        <div class="mb-3">
+            <label for="studentAge" class="form-label">Возраст студента</label>
+            <input type="text" class="form-control" ng-model="student.age" id="studentAge" placeholder="Введите возраст студента">
+        </div>
+        <button type="submit" class="btn btn-primary">Изменить</button>
+    </form>
+</div>

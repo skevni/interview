@@ -1,0 +1,29 @@
+<div class="container" ng-controller="studentsController">
+    <h3>Список студентов</h3>
+    <br><br>
+    <button class="btn btn-primary" ng-click="create()" type="button">Создать</button>
+    <table class="table">
+        <thead>
+        <tr>
+            <td>Идентификатор</td>
+            <td>Имя</td>
+            <td>Возраст</td>
+            <td></td>
+            <td></td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="s in students">
+            <td>{{s.id}}</td>
+            <td>{{s.name}}</td>
+            <td>{{s.age}}</td>
+            <td>
+                <button class="btn btn-primary" ng-click="edit(s.id)" type="button">Изменить</button>
+            </td>
+            <td>
+                <button class="btn btn-primary" ng-click="delete(s.id)" type="button">Удалить</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
